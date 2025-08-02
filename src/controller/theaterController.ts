@@ -1,35 +1,34 @@
-import type { Request, Response } from "express"
-import Genre from "../models/Genre"
-import { genreSchema } from "../utils/zodSchema";
+import type { Request, Response } from "express";
+import Theater from "../models/Theater";
+import { theaterSchema } from "../utils/zodSchema";
 
-export const getGenres = async (req: Request, res: Response) => {
+export const getTheaters = async (req: Request, res: Response) => {
     try {
-        const genres = await Genre.find();
+        const theaters = await Theater.find();
 
         return res.json({
-            data: genres,
-            message: 'Success get data!',
+            data: theaters,
+            message: 'Success get data',
             status: 'Success',
         });
     } catch (error) {
         console.log(error);
-
         return res.status(500).json({
-            message: 'Failed to get data!',
+            message: 'Failed to get data',
             data: null,
-            status: 'Failed'
-        })
+            status: 'Failed',
+        });
     }
 }
 
-export const getGenreDetail = async (req: Request, res: Response) => {
+export const getTheaterDetail = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const genre = await Genre.findById(id);
+        const theater = await Theater.findById(id);
 
         return res.json({
-            data: genre,
+            data: theater,
             message: 'Success get data!',
             status: 'Success',
         });
@@ -44,15 +43,16 @@ export const getGenreDetail = async (req: Request, res: Response) => {
     }
 }
 
-export const postGenre = async (req: Request, res: Response) => {
+export const postTheater = async (req: Request, res: Response) => {
     try {
-        const body = genreSchema.parse(req.body);
+        const body = theaterSchema.parse(req.body);
 
-        const genre = new Genre({
+        const theater = new Theater({
             name: body.name,
-        })
+            city: body.city,
+        });
 
-        const newData = await genre.save();
+        const newData = await theater.save();
 
         return res.json({
             message: 'Success create data',
@@ -70,17 +70,18 @@ export const postGenre = async (req: Request, res: Response) => {
     }
 }
 
-export const putGenre = async (req: Request, res: Response) => {
+export const putTheater = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const body = genreSchema.parse(req.body);
+        const body = theaterSchema.parse(req.body);
 
-        await Genre.findByIdAndUpdate(id, {
+        await Theater.findByIdAndUpdate(id, {
             name: body.name,
+            city: body.city
         });
 
-        const updatedData = await Genre.findById(id);
+        const updatedData = await Theater.findById(id);
 
         return res.json({
             message: 'Success update data',
@@ -98,13 +99,13 @@ export const putGenre = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteGenre = async (req: Request, res: Response) => {
+export const deleteTheater = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const deletedData = await Genre.findById(id);
+        const deletedData = await Theater.findById(id);
 
-        await Genre.findByIdAndDelete(id);
+        await Theater.findByIdAndDelete(id);
 
         return res.json({
             message: 'Success delete data',
