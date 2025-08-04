@@ -11,12 +11,12 @@ const movieSchema = new mongoose.Schema({
     },
     genre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Genre',
+        ref: 'Genre', // models
     },
     theaters: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Theaters',
+            ref: 'Theater', // models
         },
     ],
     description: {
