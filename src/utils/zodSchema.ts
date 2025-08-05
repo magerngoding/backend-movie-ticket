@@ -20,3 +20,10 @@ export const movieSchema = z.object({
     price: z.number(),
     bonus: z.string().optional(),
 }).strict(); // hanya boleh ada field yang di atas aja
+
+export const authSchema = z.object({
+    name: z.string().min(5),
+    email: z.string().email(),
+    password: z.string().min(5),
+    role: z.enum(['admin', 'customer']),
+});
