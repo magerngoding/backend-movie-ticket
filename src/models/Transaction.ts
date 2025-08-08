@@ -26,6 +26,12 @@ const transactionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    seats: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'TransactionSeat',
+        },
+    ],
 
     // relasi
     user: {

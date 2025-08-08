@@ -9,7 +9,7 @@ export const thumbnailStorage = (path = 'public/uploads/thumbnails') =>
         },
         filename: (req, file, cb) => {
             const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-            const filename = `${file.filename}-${uniqueSuffix}.${file.mimetype.split('/')[1]}`;
+            const filename = `${file.fieldname}-${uniqueSuffix}.${file.mimetype.split('/')[1]}`;
             cb(null, filename);
         },
     });

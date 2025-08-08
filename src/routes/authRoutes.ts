@@ -1,10 +1,29 @@
 import express from 'express'
-import { login } from '../controller/authController'
+import { login, register } from '../controller/authController'
 import { validateRequest } from '../middleware/validateRequest'
 import { authSchema } from '../utils/zodSchema'
+import multer from 'multer'
+import { imageFilter, thumbnailStorage } from '../utils/multer'
+
 
 const authRoutes = express.Router()
 
-authRoutes.post('/auth/login', validateRequest(authSchema.omit({ name: true })), login)
+const upload = multer({
+    storage: thumbnailStorage('public/uploads/photos'),
+    fileFilter: imageFilter
+})
+
+authRoutes.post(
+    '/auth/login',
+    validateRequest(authSchema.omit({ name: true })),
+    login,
+)
+
+authRoutes.post(
+    '/auth/register',
+    upload.single("photo"),
+    register,
+)
+
 
 export default authRoutes;
