@@ -2,6 +2,7 @@ import type { Response, Request } from "express"
 import Movie from "../models/Movie";
 import Genre from "../models/Genre";
 import Transaction from "../models/Transaction";
+import Theater from "../models/Theater";
 
 export const getMovies = async (req: Request, res: Response) => {
     try {
@@ -148,5 +149,90 @@ export const getAvailableSeats = async (req: Request, res: Response) => {
             status: 'Failed'
         })
     }
+}
 
+export const getMoviesFilter = async (req: Request, res: Response) => {
+    try {
+        const { genreId } = req.params
+        const { city, theaters, availbility } = req.query
+
+        let filterQuery: any = {}
+
+        if (genreId) {
+            filterQuery = {
+                ...filterQuery,
+                genre: genreId,
+            }
+        }
+
+        if (city) {
+            const theaters_lists = await Theater.find({
+                city: city
+            })
+
+            const theaterIds = theaters_lists.map((the) => the.id)
+
+            filterQuery = {
+                ...filterQuery,
+                theaters: {
+                    $in: [...theaterIds]
+                }
+            }
+        }
+
+        if (theaters) {
+            const theaterIds2 = theaters as string[]
+
+            filterQuery = {
+                ...filterQuery,
+                theaters: {
+                    $in: [...(filterQuery?.theaters.$in ?? []), theaterIds2]
+                }
+            }
+        }
+
+        if (availbility === 'true') {
+            filterQuery = {
+                ...filterQuery,
+                available: true
+            }
+        }
+
+        const data = await Movie.find({
+            ...filterQuery
+        })
+            .select('title genre thumbnail')
+            .populate({
+                path: 'genre',
+                select: 'name'
+            })
+
+        const allData = await Movie.find()
+            .select('title genre theaters thumbnail')
+            .populate({
+                path: 'genre',
+                select: 'name'
+            })
+            .populate({
+                path: 'theaters',
+                select: 'city'
+            })
+
+        return res.json({
+            message: 'Success get data',
+            data: {
+                filteredByMovie: data,
+                allMovies: allData
+            },
+            status: true
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get data!',
+            data: null,
+            status: 'Failed'
+        })
+    }
 }
