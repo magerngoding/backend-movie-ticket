@@ -1,5 +1,6 @@
 import express from 'express'
 import { getAvailableSeats, getGenre, getMovieDetail, getMovies, getMoviesFilter, } from '../../controller/globalController'
+import { getBalance } from '../../controller/walletController';
 
 const globalRoutes = express.Router()
 
