@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import { required } from "zod/v4/core/util.cjs";
 
 const transactionSchema = new mongoose.Schema({
-    subTotal: {
+    subtotal: {
         type: Number,
         required: true,
         default: 0
